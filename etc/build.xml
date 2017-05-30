@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+
+<project name="Mastermind" basedir=".." default="todo">
+    <property name="src" value="src"/>
+    <property name="test" value="test"/>
+    <property name="classes" value="classes"/>
+    <property name="conf" value="etc"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="doc.dir" value="doc"/>
+    
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+    </path>
+
+
+    <property name="paquetes" value="es.unileon.prg1"/>
+
+    <target name="clean">
+      <delete dir="${classes}"/>
+    </target>
+
+    <target name="compile" depends="clean">
+      <mkdir dir="${classes}"/>
+      <javac includeantruntime = "false" srcdir="${src}" destdir="${classes}">
+         <classpath>
+              <pathelement path="${classes}"/>
+              <path refid="classpath"/>
+         </classpath>
+      </javac>
+      <echo message="Compiling...done"/>
+    </target>
+
+    <target name="run" depends="compile">
+      <copy file="${src}/log4j2.xml" tofile="${classes}/log4j2.xml"/>
+    	
+      <java classname="es.unileon.prg1.masterMind.MainMastermind">
+         <classpath>
+              <pathelement path="${classes}"/>
+              <path refid="classpath"/>
+         </classpath>
+      	 <arg value="3"/>
+      	 <arg value="3"/>
+      	 <arg value="true"/>
+      </java>
+    </target>
+	
+	<target name="compilarTest" >
+      <javac includeantruntime="false" srcdir="${test}" destdir="${classes}">
+         <classpath>
+              <pathelement path="${classes}"/>
+              <path refid="classpath"/>
+         </classpath>
+      </javac>
+      <echo message="Tests compilados"/>
+    </target>
+	
+	<target name="probar" depends="compilarTest">
+		<java classname="org.junit.runner.JUnitCore">
+			<classpath>
+			   <pathelement path="${classes}"/>
+			   <path refid="classpath"/>
+			</classpath>
+			<arg value="es.unileon.prg1.masterMind.FichaTest"/>
+			<arg value="es.unileon.prg1.masterMind.TableroTest"/>
+			<arg value="es.unileon.prg1.masterMind.CombinacionTest"/>
+			<arg value="es.unileon.prg1.masterMind.MastermindTest"/>
+		</java>
+	</target>
+	
+	<target name="doc" description="generate documentation">
+	   <javadoc sourcepath="${src}" destdir="${doc.dir}">
+	   	  <classpath>
+	   		 <pathelement path="${classes}"/>
+	   		 <path refid="classpath"/>
+	   	  </classpath>
+	   	</javadoc>
+	</target>
+
+    <target name="todo" depends="run"/>
+
+</project>
+
